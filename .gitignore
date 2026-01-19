@@ -6,14 +6,15 @@
 [Bb]uilds/
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
-
-# MemoryCaptures can get excessive in size
 [Mm]emoryCaptures/
 
-# Asset meta data should only be ignored when the corresponding asset is ignored
+# Asset meta data
 !/[Aa]ssets/**/*.meta
 
-# Auto-generated VS / Rider files
+# Unity packages lock file (keep this)
+!Packages/packages-lock.json
+
+# IDE files
 .vs/
 .vscode/
 .idea/
@@ -24,12 +25,9 @@
 *.pidb
 *.booproj
 *.svd
-
-# Rider
-.idea/
 *.sln.iml
 
-# Unity3D generated meta files for ignored assets
+# Unity generated meta files for ignored assets
 *.pidb.meta
 *.booproj.meta
 *.svd.meta
@@ -48,16 +46,9 @@ sysinfo.txt
 *.x64
 *.zip
 
-# macOS
+# OS junk
 .DS_Store
-
-# Windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini
-
-# Linux
 *~
-
-# JetBrains Rider cache
-.idea/
