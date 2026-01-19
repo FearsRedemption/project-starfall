@@ -11,6 +11,9 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float moveSpeed = 6f;
     [Tooltip("How quickly the player turns to match the camera yaw (degrees/sec).")]
     [SerializeField] private float turnSpeed = 720f;
+    
+    [Header("Sprint")]
+    [SerializeField] private float sprintMultiplier = 1.6f;
 
     [Header("Jump")]
     [SerializeField] private float jumpImpulse = 6f;
@@ -54,9 +57,13 @@ public class PlayerMove : MonoBehaviour
         right.Normalize();
 
         Vector3 moveDir = forward * input.z + right * input.x;
+        
+        // Sprint
+        bool isSprinting = Input.GetKey(KeyCode.LeftShift) && input.sqrMagnitude > 0.01f;
+        float currentSpeed = moveSpeed * (isSprinting ? sprintMultiplier : 1f);
 
         // Move
-        Vector3 newPosition = _rb.position + moveDir * (moveSpeed * Time.fixedDeltaTime);
+        Vector3 newPosition = _rb.position + moveDir * (currentSpeed * Time.fixedDeltaTime);
         _rb.MovePosition(newPosition);
 
         // --- Grounded-style facing: face the camera yaw (so camera stays "behind") ---
