@@ -9,6 +9,7 @@ public class PlayerCharacterVisual : MonoBehaviour
     [SerializeField] private Color skinColor = new Color(0.72f, 0.52f, 0.38f);
 
     private const string VisualRootName = "GeneratedCharacterVisual";
+    private const string PlayerModelPath = "Models/PrototypePlayer";
 
     private void Awake()
     {
@@ -17,6 +18,9 @@ public class PlayerCharacterVisual : MonoBehaviour
             capsuleRenderer.enabled = false;
 
         if (transform.Find(VisualRootName))
+            return;
+
+        if (TryCreateModelVisual())
             return;
 
         Material cloth = MakeMaterial("Muted Cloth", clothColor);
@@ -49,6 +53,20 @@ public class PlayerCharacterVisual : MonoBehaviour
         CreatePart("RightLeg", PrimitiveType.Capsule, root, new Vector3(0.2f, -0.58f, 0f), Quaternion.identity, new Vector3(0.23f, 0.68f, 0.23f), cloth);
         CreatePart("LeftBoot", PrimitiveType.Cube, root, new Vector3(-0.2f, -0.98f, 0.07f), Quaternion.identity, new Vector3(0.27f, 0.18f, 0.38f), leather);
         CreatePart("RightBoot", PrimitiveType.Cube, root, new Vector3(0.2f, -0.98f, 0.07f), Quaternion.identity, new Vector3(0.27f, 0.18f, 0.38f), leather);
+    }
+
+    private bool TryCreateModelVisual()
+    {
+        GameObject model = Resources.Load<GameObject>(PlayerModelPath);
+        if (!model)
+            return false;
+
+        GameObject instance = Instantiate(model, transform);
+        instance.name = VisualRootName;
+        instance.transform.localPosition = Vector3.zero;
+        instance.transform.localRotation = Quaternion.identity;
+        instance.transform.localScale = Vector3.one;
+        return true;
     }
 
     private static Material MakeMaterial(string materialName, Color color)

@@ -1,0 +1,24 @@
+newmtl Cloth
+Kd 0.22 0.25 0.22
+Ks 0.05 0.05 0.05
+Ns 18
+
+newmtl Armor
+Kd 0.34 0.33 0.28
+Ks 0.18 0.17 0.14
+Ns 36
+
+newmtl Leather
+Kd 0.18 0.13 0.09
+Ks 0.04 0.03 0.025
+Ns 12
+
+newmtl Accent
+Kd 0.42 0.56 0.72
+Ks 0.15 0.18 0.22
+Ns 32
+
+newmtl Skin
+Kd 0.72 0.52 0.38
+Ks 0.05 0.04 0.035
+Ns 14
