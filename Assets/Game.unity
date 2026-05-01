@@ -244,6 +244,7 @@ GameObject:
   - component: {fileID: 254942662}
   - component: {fileID: 254942661}
   - component: {fileID: 254942660}
+  - component: {fileID: 254942664}
   m_Layer: 0
   m_Name: Box_02
   m_TagString: Untagged
@@ -420,6 +421,7 @@ GameObject:
   - component: {fileID: 581300048}
   - component: {fileID: 581300047}
   - component: {fileID: 581300046}
+  - component: {fileID: 581300050}
   m_Layer: 0
   m_Name: Box_03
   m_TagString: Untagged
@@ -570,6 +572,7 @@ GameObject:
   - component: {fileID: 837729368}
   - component: {fileID: 837729367}
   - component: {fileID: 837729372}
+  - component: {fileID: 837729373}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -720,6 +723,28 @@ MonoBehaviour:
   groundLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &837729373
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837729366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 35c0e560fdf342f4bb051c4b3f486be1, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerAttack
+  aimSource: {fileID: 1443694166}
+  attackRange: 3
+  attackRadius: 0.35
+  attackHeight: 1.2
+  attackCooldown: 0.35
+  damage: 1
+  knockbackImpulse: 4
+  hitLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &888224717
 GameObject:
   m_ObjectHideFlags: 0
@@ -732,6 +757,7 @@ GameObject:
   - component: {fileID: 888224720}
   - component: {fileID: 888224719}
   - component: {fileID: 888224718}
+  - component: {fileID: 888224722}
   m_Layer: 0
   m_Name: Box_01
   m_TagString: Untagged
@@ -956,6 +982,7 @@ GameObject:
   - component: {fileID: 1253830375}
   - component: {fileID: 1253830374}
   - component: {fileID: 1253830373}
+  - component: {fileID: 1253830377}
   m_Layer: 0
   m_Name: Ramp
   m_TagString: Untagged
@@ -1350,6 +1377,7 @@ GameObject:
   - component: {fileID: 1577752135}
   - component: {fileID: 1577752134}
   - component: {fileID: 1577752133}
+  - component: {fileID: 1577752137}
   m_Layer: 0
   m_Name: Pillar
   m_TagString: Untagged
@@ -1499,6 +1527,76 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FollowTarget
   target: {fileID: 837729371}
   offset: {x: 0, y: 0, z: 0}
+--- !u!114 &254942664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 254942659}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f7c0776205b4a809c1b9e3359e0035a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Damageable
+  maxHealth: 3
+  destroyOnDeath: 1
+--- !u!114 &581300050
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 581300045}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f7c0776205b4a809c1b9e3359e0035a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Damageable
+  maxHealth: 3
+  destroyOnDeath: 1
+--- !u!114 &888224722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 888224717}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f7c0776205b4a809c1b9e3359e0035a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Damageable
+  maxHealth: 3
+  destroyOnDeath: 1
+--- !u!114 &1253830377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1253830372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f7c0776205b4a809c1b9e3359e0035a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Damageable
+  maxHealth: 3
+  destroyOnDeath: 1
+--- !u!114 &1577752137
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1577752132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0f7c0776205b4a809c1b9e3359e0035a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Damageable
+  maxHealth: 3
+  destroyOnDeath: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
