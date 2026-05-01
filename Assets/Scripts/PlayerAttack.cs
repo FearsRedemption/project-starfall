@@ -31,6 +31,8 @@ public class PlayerAttack : MonoBehaviour
         if (!Physics.SphereCast(ray, attackRadius, out RaycastHit hit, attackRange, hitLayers, QueryTriggerInteraction.Ignore))
             return;
 
+        Debug.Log($"Attack hit {hit.collider.name}");
+
         if (hit.rigidbody)
             hit.rigidbody.AddForceAtPosition(ray.direction * knockbackImpulse, hit.point, ForceMode.Impulse);
 

@@ -573,6 +573,9 @@ GameObject:
   - component: {fileID: 837729367}
   - component: {fileID: 837729372}
   - component: {fileID: 837729373}
+  - component: {fileID: 837729374}
+  - component: {fileID: 837729375}
+  - component: {fileID: 837729376}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -637,7 +640,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 837729366}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -717,12 +720,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
   cameraYaw: {fileID: 400326213}
   moveSpeed: 6
+  groundAcceleration: 45
   turnSpeed: 720
+  sprintMultiplier: 1.6
   jumpImpulse: 6
+  airAcceleration: 12
+  maxAirSpeed: 8.5
   groundCheckExtraDistance: 0.05
   groundLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+  dodgeSpeed: 13
+  dodgeDuration: 0.18
+  dodgeCooldown: 0.45
+  doubleTapWindow: 0.25
 --- !u!114 &837729373
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -745,6 +756,55 @@ MonoBehaviour:
   hitLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &837729374
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837729366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 672c2f510a0e4c94abe155cb1b8c52d8, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerCharacterVisual
+  clothColor: {r: 0.22, g: 0.25, b: 0.22, a: 1}
+  armorColor: {r: 0.34, g: 0.33, b: 0.28, a: 1}
+  leatherColor: {r: 0.18, g: 0.13, b: 0.09, a: 1}
+  accentColor: {r: 0.42, g: 0.56, b: 0.72, a: 1}
+  skinColor: {r: 0.72, g: 0.52, b: 0.38, a: 1}
+--- !u!114 &837729375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837729366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2d8fc5691e4f4e37b0abc3d770eb6f6a, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TestEnemySpawner
+  spawnOffset: {x: 3, y: 0, z: 4}
+  enemyColor: {r: 0.7, g: 0.12, b: 0.1, a: 1}
+--- !u!114 &837729376
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 837729366}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a791351f7a1347c68ddcfaf0dc0e9c2f, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::TestArenaBuilder
+  arenaCenter: {x: 0, y: -0.1, z: 5}
+  arenaSize: {x: 22, y: 18}
+  groundColor: {r: 0.31, g: 0.34, b: 0.28, a: 1}
+  stoneColor: {r: 0.42, g: 0.4, b: 0.34, a: 1}
+  targetColor: {r: 0.65, g: 0.2, b: 0.14, a: 1}
+  hideOriginalGround: 1
 --- !u!1 &888224717
 GameObject:
   m_ObjectHideFlags: 0
