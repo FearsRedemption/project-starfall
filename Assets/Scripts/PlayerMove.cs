@@ -8,27 +8,27 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private Transform cameraYaw;
 
     [Header("Movement")]
-    [SerializeField] private float moveSpeed = 6f;
-    [SerializeField] private float groundAcceleration = 45f;
+    [SerializeField] private float moveSpeed = 4.8f;
+    [SerializeField] private float groundAcceleration = 32f;
     [Tooltip("How quickly the player turns to match the camera yaw (degrees/sec).")]
-    [SerializeField] private float turnSpeed = 720f;
+    [SerializeField] private float turnSpeed = 540f;
     
     [Header("Sprint")]
-    [SerializeField] private float sprintMultiplier = 1.6f;
+    [SerializeField] private float sprintMultiplier = 1.45f;
 
     [Header("Jump")]
-    [SerializeField] private float jumpImpulse = 6f;
-    [SerializeField] private float airAcceleration = 12f;
-    [SerializeField] private float maxAirSpeed = 8.5f;
+    [SerializeField] private float jumpImpulse = 5.2f;
+    [SerializeField] private float airAcceleration = 5.5f;
+    [SerializeField] private float maxAirSpeed = 7f;
     [Tooltip("Extra distance beyond the capsule bottom used for ground detection.")]
     [SerializeField] private float groundCheckExtraDistance = 0.05f;
     [SerializeField] private LayerMask groundLayers = ~0;
 
     [Header("Dodge")]
-    [SerializeField] private float dodgeSpeed = 13f;
-    [SerializeField] private float dodgeDuration = 0.18f;
-    [SerializeField] private float dodgeCooldown = 0.45f;
-    [SerializeField] private float doubleTapWindow = 0.25f;
+    [SerializeField] private float dodgeSpeed = 10.5f;
+    [SerializeField] private float dodgeDuration = 0.16f;
+    [SerializeField] private float dodgeCooldown = 0.65f;
+    [SerializeField] private float doubleTapWindow = 0.22f;
 
     private Rigidbody _rb;
     private CapsuleCollider _capsule;

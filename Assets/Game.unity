@@ -719,21 +719,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMove
   cameraYaw: {fileID: 400326213}
-  moveSpeed: 6
-  groundAcceleration: 45
-  turnSpeed: 720
-  sprintMultiplier: 1.6
-  jumpImpulse: 6
-  airAcceleration: 12
-  maxAirSpeed: 8.5
+  moveSpeed: 4.8
+  groundAcceleration: 32
+  turnSpeed: 540
+  sprintMultiplier: 1.45
+  jumpImpulse: 5.2
+  airAcceleration: 5.5
+  maxAirSpeed: 7
   groundCheckExtraDistance: 0.05
   groundLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  dodgeSpeed: 13
-  dodgeDuration: 0.18
-  dodgeCooldown: 0.45
-  doubleTapWindow: 0.25
+  dodgeSpeed: 10.5
+  dodgeDuration: 0.16
+  dodgeCooldown: 0.65
+  doubleTapWindow: 0.22
 --- !u!114 &837729373
 MonoBehaviour:
   m_ObjectHideFlags: 0
