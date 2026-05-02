@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody), typeof(CapsuleCollider), typeof(Damageable))]
-public class TestEnemy : MonoBehaviour
+public class TrainingEnemy : MonoBehaviour
 {
     [SerializeField] private Transform target;
     [SerializeField] private float detectRange = 8f;
@@ -18,6 +18,13 @@ public class TestEnemy : MonoBehaviour
     {
         _rb = GetComponent<Rigidbody>();
         _rb.freezeRotation = true;
+
+        if (!target)
+        {
+            PlayerHealth player = FindFirstObjectByType<PlayerHealth>();
+            if (player)
+                target = player.transform;
+        }
     }
 
     private void FixedUpdate()
@@ -61,7 +68,7 @@ public class TestEnemy : MonoBehaviour
 
         _nextAttackTime = Time.time + attackCooldown;
 
-        TestEnemyAttackCue cue = GetComponent<TestEnemyAttackCue>();
+        EnemyAttackCue cue = GetComponent<EnemyAttackCue>();
         if (cue)
             cue.Flash();
 

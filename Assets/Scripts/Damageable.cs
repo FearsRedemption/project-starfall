@@ -4,25 +4,30 @@ public class Damageable : MonoBehaviour
 {
     [SerializeField] private int maxHealth = 3;
     [SerializeField] private bool destroyOnDeath = true;
-    [SerializeField] private bool showHealthBar = true;
+
+    [Header("Scene Feedback")]
+    [SerializeField] private Transform healthBarRoot;
+    [SerializeField] private Transform healthBarFill;
     [SerializeField] private Vector3 healthBarOffset = new Vector3(0f, 1.25f, 0f);
     [SerializeField] private Color hitFlashColor = new Color(1f, 0.82f, 0.52f);
     [SerializeField] private float hitFlashDuration = 0.08f;
 
     private int _currentHealth;
-    private Transform _healthBarRoot;
-    private Transform _healthBarFill;
     private MeshRenderer[] _renderers;
     private Color[] _baseColors;
+    private Vector3 _healthBarFillFullScale;
+    private Camera _mainCamera;
     private float _flashUntil;
+
+    public float Health01 => maxHealth > 0 ? Mathf.Clamp01((float)_currentHealth / maxHealth) : 0f;
+    public bool IsDead => _currentHealth <= 0;
 
     private void Awake()
     {
         _currentHealth = maxHealth;
         CacheRenderers();
-
-        if (showHealthBar)
-            CreateHealthBar();
+        if (healthBarFill)
+            _healthBarFillFullScale = healthBarFill.localScale;
     }
 
     private void Update()
@@ -32,16 +37,22 @@ public class Damageable : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!_healthBarRoot || !Camera.main)
+        if (!healthBarRoot)
             return;
 
-        _healthBarRoot.position = transform.position + healthBarOffset;
-        _healthBarRoot.rotation = Quaternion.LookRotation(_healthBarRoot.position - Camera.main.transform.position, Vector3.up);
+        if (!_mainCamera)
+            _mainCamera = Camera.main;
+
+        if (!_mainCamera)
+            return;
+
+        healthBarRoot.position = transform.position + healthBarOffset;
+        healthBarRoot.rotation = Quaternion.LookRotation(healthBarRoot.position - _mainCamera.transform.position, Vector3.up);
     }
 
     public void TakeDamage(int amount)
     {
-        if (amount <= 0)
+        if (amount <= 0 || IsDead)
             return;
 
         _currentHealth = Mathf.Max(0, _currentHealth - amount);
@@ -49,7 +60,7 @@ public class Damageable : MonoBehaviour
         FlashOnHit();
         Debug.Log($"{name} took {amount} damage. HP: {_currentHealth}/{maxHealth}");
 
-        if (_currentHealth == 0 && destroyOnDeath)
+        if (IsDead && destroyOnDeath)
         {
             Debug.Log($"{name} died.");
             Destroy(gameObject);
@@ -93,49 +104,13 @@ public class Damageable : MonoBehaviour
         }
     }
 
-    private void CreateHealthBar()
-    {
-        _healthBarRoot = new GameObject("HealthBar").transform;
-        _healthBarRoot.SetParent(transform, false);
-        _healthBarRoot.localPosition = healthBarOffset;
-
-        Transform background = CreateBarPart("Background", _healthBarRoot, new Vector3(0.7f, 0.08f, 0.03f), Color.black);
-        background.localPosition = Vector3.zero;
-
-        _healthBarFill = CreateBarPart("Fill", _healthBarRoot, new Vector3(0.66f, 0.045f, 0.035f), new Color(0.75f, 0.16f, 0.1f));
-        _healthBarFill.localPosition = new Vector3(0f, 0f, -0.01f);
-    }
-
     private void UpdateHealthBar()
     {
-        if (!_healthBarFill)
+        if (!healthBarFill)
             return;
 
         float healthPercent = maxHealth > 0 ? (float)_currentHealth / maxHealth : 0f;
-        _healthBarFill.localScale = new Vector3(0.66f * healthPercent, 0.045f, 0.035f);
-        _healthBarFill.localPosition = new Vector3(-0.33f * (1f - healthPercent), 0f, -0.01f);
-    }
-
-    private static Transform CreateBarPart(string partName, Transform parent, Vector3 scale, Color color)
-    {
-        GameObject part = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        part.name = partName;
-        part.transform.SetParent(parent, false);
-        part.transform.localScale = scale;
-
-        Collider collider = part.GetComponent<Collider>();
-        if (collider)
-            Destroy(collider);
-
-        if (part.TryGetComponent(out MeshRenderer renderer))
-        {
-            Shader shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
-            Material material = new Material(shader);
-            material.name = partName;
-            material.color = color;
-            renderer.sharedMaterial = material;
-        }
-
-        return part.transform;
+        healthBarFill.localScale = new Vector3(_healthBarFillFullScale.x * healthPercent, _healthBarFillFullScale.y, _healthBarFillFullScale.z);
+        healthBarFill.localPosition = new Vector3(-_healthBarFillFullScale.x * 0.5f * (1f - healthPercent), healthBarFill.localPosition.y, healthBarFill.localPosition.z);
     }
 }

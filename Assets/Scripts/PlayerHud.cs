@@ -3,8 +3,11 @@ using UnityEngine.UI;
 
 public class PlayerHud : MonoBehaviour
 {
+    [Header("Sources")]
     [SerializeField] private PlayerHealth health;
     [SerializeField] private PlayerMove movement;
+
+    [Header("Scene UI")]
     [SerializeField] private Image healthFill;
     [SerializeField] private Image staminaFill;
 
@@ -24,11 +27,5 @@ public class PlayerHud : MonoBehaviour
 
         if (staminaFill)
             staminaFill.fillAmount = movement ? movement.Stamina01 : 0f;
-    }
-
-    public void Bind(Image newHealthFill, Image newStaminaFill)
-    {
-        healthFill = newHealthFill;
-        staminaFill = newStaminaFill;
     }
 }

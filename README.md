@@ -83,8 +83,8 @@ Current behavior:
 - Attack uses cooldown/lockout
 - Hit detection uses a sphere cast
 - Hit confirmation is printed to the Unity console
-- A short slash cue appears on attack
-- Damaged targets flash briefly and update a world-space health bar
+- A scene-authored slash cue appears on attack
+- Damaged targets flash briefly
 - Damageable objects log HP and death
 
 Current non-goals:
@@ -134,7 +134,7 @@ Current feedback systems:
 - Stamina regenerates when not sprinting or dodging
 - Enemy contact attacks damage the player
 - Enemy attack flashes briefly for readability
-- Damageable targets show simple world-space health bars
+- Damageable targets support scene-authored health bars when assigned
 
 Future dodge work:
 
@@ -191,9 +191,9 @@ Goals for the player:
 
 The current setup keeps the original capsule collider and Rigidbody for stable movement while hiding the pill mesh. The visible player is an authored scene hierarchy made from simple mesh parts under the Player object.
 
-## Test Arena
+## Blockout Arena
 
-The scene includes an in-scene arena builder for early movement and combat validation.
+The scene includes authored blockout geometry for early movement and combat validation. The player, arena, HUD, combat targets, and training enemy are scene objects; gameplay scripts control behavior rather than spawning the play space after launch.
 
 Current arena elements:
 
@@ -220,7 +220,7 @@ The intended development order is:
 
 1. Complete and validate jump physics
 2. Build basic attack scaffold
-3. Add one test enemy
+3. Add one training enemy
 4. Add `Left Alt` dodge
 5. Add double-tap dodge extension
 6. Add tuning and feedback pass
@@ -232,15 +232,11 @@ Important scripts:
 
 - `Assets/Scripts/PlayerMove.cs`: Rigidbody movement, jump, air control, sprint, dodge
 - `Assets/Scripts/PlayerHealth.cs`: Player health and hit flash feedback
-- `Assets/Scripts/PlayerHud.cs`: Updates health and stamina HUD fill images
-- `Assets/Scripts/PlayerHudBuilder.cs`: Builds a proper Unity UI Canvas HUD for Play Mode
-- `Assets/Scripts/PlayerAttack.cs`: Basic attack and hit detection
-- `Assets/Scripts/Damageable.cs`: Health, damage logging, death, world health bars, and hit flash feedback
-- `Assets/Scripts/TestEnemyAttackCue.cs`: Enemy attack flash
-- `Assets/Scripts/TestEnemy.cs`: Enemy chase and contact attack behavior
-- `Assets/Scripts/TestEnemySpawner.cs`: Runtime enemy spawn setup
-- `Assets/Scripts/PlayerCharacterVisual.cs`: Optional blockout player visual builder
-- `Assets/Scripts/TestArenaBuilder.cs`: Movement/combat test arena builder
+- `Assets/Scripts/PlayerHud.cs`: Updates scene-authored health and stamina HUD fill images
+- `Assets/Scripts/PlayerAttack.cs`: Basic attack, hit detection, and scene-authored slash cue timing
+- `Assets/Scripts/Damageable.cs`: Health, damage logging, death, optional scene-authored health bars, and hit flash feedback
+- `Assets/Scripts/EnemyAttackCue.cs`: Enemy attack flash
+- `Assets/Scripts/TrainingEnemy.cs`: Enemy chase and contact attack behavior
 
 Important scene:
 

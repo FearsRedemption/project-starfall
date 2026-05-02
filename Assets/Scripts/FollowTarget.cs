@@ -7,7 +7,9 @@ public class FollowTarget : MonoBehaviour
 
     private void LateUpdate()
     {
-        if (!target) return;
-            transform.position = target.position + offset;
+        if (!target)
+            return;
+
+        transform.position = target.position + offset;
     }
 }

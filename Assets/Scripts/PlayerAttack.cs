@@ -10,13 +10,24 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private int damage = 1;
     [SerializeField] private float knockbackImpulse = 4f;
     [SerializeField] private LayerMask hitLayers = ~0;
-    [SerializeField] private Color swingColor = new Color(0.85f, 0.9f, 1f);
+
+    [Header("Scene Feedback")]
+    [SerializeField] private GameObject swingCue;
     [SerializeField] private float swingCueDuration = 0.12f;
 
     private float _nextAttackTime;
+    private float _hideSwingCueAt;
+
+    private void Awake()
+    {
+        if (swingCue)
+            swingCue.SetActive(false);
+    }
 
     private void Update()
     {
+        UpdateSwingCue();
+
         if (!Input.GetMouseButtonDown(0) || Time.time < _nextAttackTime)
             return;
 
@@ -70,25 +81,20 @@ public class PlayerAttack : MonoBehaviour
 
     private void ShowSwingCue(Vector3 origin, Vector3 direction)
     {
-        GameObject cue = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        cue.name = "Attack Slash Cue";
-        cue.transform.position = origin + direction.normalized * 1.25f;
-        cue.transform.rotation = Quaternion.LookRotation(direction, Vector3.up) * Quaternion.Euler(0f, 0f, 25f);
-        cue.transform.localScale = new Vector3(0.045f, 1.1f, 0.025f);
+        if (!swingCue)
+            return;
 
-        Collider cueCollider = cue.GetComponent<Collider>();
-        if (cueCollider)
-            Destroy(cueCollider);
+        swingCue.transform.position = origin + direction.normalized * 1.25f;
+        swingCue.transform.rotation = Quaternion.LookRotation(direction, Vector3.up) * Quaternion.Euler(0f, 0f, 25f);
+        swingCue.SetActive(true);
+        _hideSwingCueAt = Time.time + swingCueDuration;
+    }
 
-        if (cue.TryGetComponent(out MeshRenderer renderer))
-        {
-            Shader shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
-            Material material = new Material(shader);
-            material.name = "Attack Slash Cue";
-            material.color = swingColor;
-            renderer.sharedMaterial = material;
-        }
+    private void UpdateSwingCue()
+    {
+        if (!swingCue || !swingCue.activeSelf || Time.time < _hideSwingCueAt)
+            return;
 
-        Destroy(cue, swingCueDuration);
+        swingCue.SetActive(false);
     }
 }
