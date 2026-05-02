@@ -10,6 +10,8 @@ public class PlayerAttack : MonoBehaviour
     [SerializeField] private int damage = 1;
     [SerializeField] private float knockbackImpulse = 4f;
     [SerializeField] private LayerMask hitLayers = ~0;
+    [SerializeField] private Color swingColor = new Color(0.85f, 0.9f, 1f);
+    [SerializeField] private float swingCueDuration = 0.12f;
 
     private float _nextAttackTime;
 
@@ -28,7 +30,9 @@ public class PlayerAttack : MonoBehaviour
         Vector3 origin = transform.position + Vector3.up * attackHeight;
         Ray ray = new Ray(origin, aim.forward);
 
-        if (!Physics.SphereCast(ray, attackRadius, out RaycastHit hit, attackRange, hitLayers, QueryTriggerInteraction.Ignore))
+        ShowSwingCue(origin, ray.direction);
+
+        if (!TryGetAttackHit(ray, out RaycastHit hit))
             return;
 
         Debug.Log($"Attack hit {hit.collider.name}");
@@ -36,7 +40,55 @@ public class PlayerAttack : MonoBehaviour
         if (hit.rigidbody)
             hit.rigidbody.AddForceAtPosition(ray.direction * knockbackImpulse, hit.point, ForceMode.Impulse);
 
-        if (hit.collider.TryGetComponent(out Damageable damageable))
+        Damageable damageable = hit.collider.GetComponent<Damageable>() ?? hit.collider.GetComponentInParent<Damageable>();
+        if (damageable)
             damageable.TakeDamage(damage);
+    }
+
+    private bool TryGetAttackHit(Ray ray, out RaycastHit closestHit)
+    {
+        closestHit = default;
+        bool hasHit = false;
+        float closestDistance = float.MaxValue;
+
+        RaycastHit[] hits = Physics.SphereCastAll(ray, attackRadius, attackRange, hitLayers, QueryTriggerInteraction.Ignore);
+        foreach (RaycastHit hit in hits)
+        {
+            if (!hit.collider || hit.collider.transform.root == transform.root)
+                continue;
+
+            if (hit.distance >= closestDistance)
+                continue;
+
+            closestHit = hit;
+            closestDistance = hit.distance;
+            hasHit = true;
+        }
+
+        return hasHit;
+    }
+
+    private void ShowSwingCue(Vector3 origin, Vector3 direction)
+    {
+        GameObject cue = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        cue.name = "Attack Slash Cue";
+        cue.transform.position = origin + direction.normalized * 1.25f;
+        cue.transform.rotation = Quaternion.LookRotation(direction, Vector3.up) * Quaternion.Euler(0f, 0f, 25f);
+        cue.transform.localScale = new Vector3(0.045f, 1.1f, 0.025f);
+
+        Collider cueCollider = cue.GetComponent<Collider>();
+        if (cueCollider)
+            Destroy(cueCollider);
+
+        if (cue.TryGetComponent(out MeshRenderer renderer))
+        {
+            Shader shader = Shader.Find("Universal Render Pipeline/Lit") ?? Shader.Find("Standard");
+            Material material = new Material(shader);
+            material.name = "Attack Slash Cue";
+            material.color = swingColor;
+            renderer.sharedMaterial = material;
+        }
+
+        Destroy(cue, swingCueDuration);
     }
 }

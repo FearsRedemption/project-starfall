@@ -15,11 +15,13 @@ public class PlayerMove : MonoBehaviour
     
     [Header("Sprint")]
     [SerializeField] private float sprintMultiplier = 1.45f;
+    [SerializeField] private float sprintStaminaDrainPerSecond = 14f;
+    [SerializeField] private float minSprintStamina = 5f;
 
     [Header("Jump")]
-    [SerializeField] private float jumpImpulse = 5.2f;
-    [SerializeField] private float airAcceleration = 5.5f;
-    [SerializeField] private float maxAirSpeed = 7f;
+    [SerializeField] private float jumpImpulse = 6.6f;
+    [SerializeField] private float airAcceleration = 6.25f;
+    [SerializeField] private float maxAirSpeed = 7.2f;
     [Tooltip("Extra distance beyond the capsule bottom used for ground detection.")]
     [SerializeField] private float groundCheckExtraDistance = 0.05f;
     [SerializeField] private LayerMask groundLayers = ~0;
@@ -28,7 +30,12 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] private float dodgeSpeed = 10.5f;
     [SerializeField] private float dodgeDuration = 0.16f;
     [SerializeField] private float dodgeCooldown = 0.65f;
+    [SerializeField] private float dodgeStaminaCost = 24f;
     [SerializeField] private float doubleTapWindow = 0.22f;
+
+    [Header("Stamina")]
+    [SerializeField] private float maxStamina = 100f;
+    [SerializeField] private float staminaRegenPerSecond = 22f;
 
     private Rigidbody _rb;
     private CapsuleCollider _capsule;
@@ -45,11 +52,18 @@ public class PlayerMove : MonoBehaviour
     private float _lastAPress = -1f;
     private float _lastSPress = -1f;
     private float _lastDPress = -1f;
+    private float _stamina;
+    private bool _isSprinting;
+
+    public float Stamina01 => maxStamina > 0f ? Mathf.Clamp01(_stamina / maxStamina) : 0f;
+    public bool IsSprinting => _isSprinting;
+    public bool IsDodging => _dodgeTimeRemaining > 0f;
 
     private void Awake()
     {
         _rb = GetComponent<Rigidbody>();
         _capsule = GetComponent<CapsuleCollider>();
+        _stamina = maxStamina;
     }
 
     private void Update()
@@ -72,8 +86,8 @@ public class PlayerMove : MonoBehaviour
         Vector3 moveDir = forward * _moveInput.y + right * _moveInput.x;
 
         bool grounded = IsGrounded();
-        bool isSprinting = Input.GetKey(KeyCode.LeftShift) && _moveInput.sqrMagnitude > 0.01f;
-        float targetSpeed = moveSpeed * (isSprinting ? sprintMultiplier : 1f);
+        _isSprinting = Input.GetKey(KeyCode.LeftShift) && _moveInput.sqrMagnitude > 0.01f && _stamina > minSprintStamina;
+        float targetSpeed = moveSpeed * (_isSprinting ? sprintMultiplier : 1f);
 
         FaceCameraYaw();
 
@@ -101,6 +115,7 @@ public class PlayerMove : MonoBehaviour
         else
             ApplyAirMovement(moveDir, targetSpeed);
 
+        UpdateStamina(_isSprinting);
         HandleJump(grounded);
     }
 
@@ -139,13 +154,26 @@ public class PlayerMove : MonoBehaviour
 
     private void TryStartDodge(Vector3 moveDir, Vector3 forward)
     {
-        if (Time.time < _nextDodgeTime)
+        if (Time.time < _nextDodgeTime || _stamina < dodgeStaminaCost)
             return;
 
         Vector3 direction = moveDir.sqrMagnitude > 0.0001f ? moveDir.normalized : forward;
         _dodgeVelocity = direction * dodgeSpeed;
         _dodgeTimeRemaining = dodgeDuration;
         _nextDodgeTime = Time.time + dodgeCooldown;
+        _stamina = Mathf.Max(0f, _stamina - dodgeStaminaCost);
+    }
+
+    private void UpdateStamina(bool isSprinting)
+    {
+        if (IsDodging)
+            return;
+
+        float delta = Time.fixedDeltaTime;
+        if (isSprinting)
+            _stamina = Mathf.Max(0f, _stamina - sprintStaminaDrainPerSecond * delta);
+        else
+            _stamina = Mathf.Min(maxStamina, _stamina + staminaRegenPerSecond * delta);
     }
 
     private bool WasDoubleTapped(KeyCode key, ref float lastPressTime)

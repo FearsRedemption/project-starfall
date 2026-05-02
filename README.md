@@ -1,6 +1,6 @@
 # Project Starfall
 
-Project Starfall is an early-stage third-person Unity game prototype focused on readable, momentum-based movement and minimal combat foundations. The current goal is to build a strong controller and test loop before adding animation, VFX, polish, or production art.
+Project Starfall is an early-stage third-person Unity game focused on readable, momentum-based movement and combat foundations. The current goal is to build a strong controller, clear feedback loop, and practical test space before adding animation, VFX polish, or production art.
 
 ## Current Direction
 
@@ -83,6 +83,8 @@ Current behavior:
 - Attack uses cooldown/lockout
 - Hit detection uses a sphere cast
 - Hit confirmation is printed to the Unity console
+- A short slash cue appears on attack
+- Damaged targets flash briefly and update a world-space health bar
 - Damageable objects log HP and death
 
 Current non-goals:
@@ -92,9 +94,9 @@ Current non-goals:
 - No VFX polish
 - No full enemy combat model
 
-## Enemy Prototype
+## Training Enemy
 
-A simple test enemy exists to validate the gameplay loop.
+A simple training enemy exists to validate the gameplay loop.
 
 Current behavior:
 
@@ -120,6 +122,19 @@ Current dodge behavior:
 - Dodge direction uses the current movement input vector
 - If there is no movement input, dodge uses forward direction
 - Dodge has fixed duration, speed, and cooldown
+- Dodge consumes stamina
+
+## Feedback Pass
+
+Current feedback systems:
+
+- Styled health and stamina HUD
+- Sprint drains stamina
+- Dodge spends stamina
+- Stamina regenerates when not sprinting or dodging
+- Enemy contact attacks damage the player
+- Enemy attack flashes briefly for readability
+- Damageable targets show simple world-space health bars
 
 Future dodge work:
 
@@ -164,7 +179,7 @@ Avoid:
 
 ## Character Visual Direction
 
-The current player visual is a generated prototype made from Unity primitives. It is not final art.
+The current player visual is a simple humanoid blockout made from scene mesh parts. It is not final art.
 
 Goals for the player:
 
@@ -174,11 +189,11 @@ Goals for the player:
 - Reserved accent color for readability
 - Future animation should reinforce momentum and direction changes
 
-The current prototype keeps the original capsule collider and Rigidbody for stable movement while hiding the pill mesh and generating a more readable humanoid shape at runtime.
+The current setup keeps the original capsule collider and Rigidbody for stable movement while hiding the pill mesh. The visible player is an authored scene hierarchy made from simple mesh parts under the Player object.
 
 ## Test Arena
 
-The scene includes a runtime-generated test arena for early movement and combat validation.
+The scene includes an in-scene arena builder for early movement and combat validation.
 
 Current arena elements:
 
@@ -216,23 +231,27 @@ The intended development order is:
 Important scripts:
 
 - `Assets/Scripts/PlayerMove.cs`: Rigidbody movement, jump, air control, sprint, dodge
+- `Assets/Scripts/PlayerHealth.cs`: Player health and hit flash feedback
+- `Assets/Scripts/PlayerHud.cs`: Updates health and stamina HUD fill images
+- `Assets/Scripts/PlayerHudBuilder.cs`: Builds a proper Unity UI Canvas HUD for Play Mode
 - `Assets/Scripts/PlayerAttack.cs`: Basic attack and hit detection
-- `Assets/Scripts/Damageable.cs`: Health, damage logging, death
-- `Assets/Scripts/TestEnemy.cs`: Prototype enemy chase behavior
+- `Assets/Scripts/Damageable.cs`: Health, damage logging, death, world health bars, and hit flash feedback
+- `Assets/Scripts/TestEnemyAttackCue.cs`: Enemy attack flash
+- `Assets/Scripts/TestEnemy.cs`: Enemy chase and contact attack behavior
 - `Assets/Scripts/TestEnemySpawner.cs`: Runtime enemy spawn setup
-- `Assets/Scripts/PlayerCharacterVisual.cs`: Runtime prototype player visual
-- `Assets/Scripts/TestArenaBuilder.cs`: Runtime movement/combat test arena
+- `Assets/Scripts/PlayerCharacterVisual.cs`: Optional blockout player visual builder
+- `Assets/Scripts/TestArenaBuilder.cs`: Movement/combat test arena builder
 
 Important scene:
 
-- `Assets/Game.unity`
+- `Assets/Scenes/SampleScene.unity`
 
 ## Testing Notes
 
 Run Play Mode and verify:
 
-- The game opens into `Assets/Game.unity`
-- Player appears as a humanoid prototype, not a pill
+- The game opens into `Assets/Scenes/SampleScene.unity`
+- Player appears as a humanoid blockout, not a pill
 - Movement is camera-relative
 - Sprint increases speed
 - Standing jump is vertical
@@ -240,10 +259,12 @@ Run Play Mode and verify:
 - Opposite input in air redirects gradually
 - `Left Alt` dodge works
 - Double-tap directional dodge works
-- Left click hits nearby targets
+- A styled health and stamina HUD appears in Play Mode
+- Sprint and dodge spend stamina
+- Left click hits nearby targets and shows a slash cue
 - Damage logs appear in the console
-- Test enemy detects and chases the player
+- Training enemy detects, chases, flashes on attack, and damages the player
 
 ## Project Status
 
-Project Starfall is in an infant prototype stage. Systems are intentionally simple and should be treated as foundations for feel testing rather than finished gameplay.
+Project Starfall is still early, but the current build is moving from raw prototype toward a playable foundation. Systems are intentionally simple and should be treated as foundations for feel testing rather than finished gameplay.
